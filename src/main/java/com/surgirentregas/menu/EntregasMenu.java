@@ -304,7 +304,10 @@ public final class EntregasMenu implements InventoryHolder {
         DeliveryDefinition d = deliveries.get(idx);
         if (d.locked()) { viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>No hay entrega asignada en este slot.</gray>")); return; }
         var result = plugin.deliveryService().submit(viewer, d);
-        if (result instanceof DeliveryService.Result.Completed c) { if (c.credited() > 0) onCredited(c.credited()); checkFinalAchievement(); }
+                if (result instanceof DeliveryService.Result.Completed c) {
+            if (c.credited() > 0) onCredited(c.credited());
+            checkFinalAchievement();
+        }
         else if (result instanceof DeliveryService.Result.Partial p) onPartial(p);
         else if (result instanceof DeliveryService.Result.AlreadyCompleted) { viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>Ya completaste esta entrega.</gray>")); viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.7f, 0.5f); }
         else if (result instanceof DeliveryService.Result.NoItems) { viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>No tienes este material.</gray>")); viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.7f, 0.7f); }
