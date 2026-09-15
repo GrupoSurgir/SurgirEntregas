@@ -1,6 +1,7 @@
 package com.surgirentregas.menu;
 
 import com.surgirentregas.core.SurgirEntregasPlugin;
+import com.surgirentregas.delivery.DeliveryConfig;
 import com.surgirentregas.delivery.DeliveryDefinition;
 import com.surgirentregas.delivery.DeliveryService;
 import net.kyori.adventure.text.Component;
@@ -257,7 +258,7 @@ public final class EntregasMenu implements InventoryHolder {
         }
     }
 
-    private void scheduleRefresh() { Bukkit.getScheduler().runTask(plugin, this::build); }
+    private void scheduleRefresh() { build(); }
 
     private void processDeliverAll() {
         var deliveries = plugin.deliveryService().currentDeliveries();
@@ -276,12 +277,12 @@ public final class EntregasMenu implements InventoryHolder {
             raw = raw.replace("%reward%", formatReward(credited));
             viewer.sendMessage(MenuItemBuilder.toComponent(raw));
             viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>+" + formatReward(credited) + "</gray>"));
-            checkFinalAchievement();
         } else {
             viewer.sendMessage(MenuItemBuilder.toComponent(plugin.getConfig().getString("prefix", "") + "<gray>Te faltan materiales.</gray>"));
             viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>Te faltan materiales.</gray>"));
             viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.7f, 0.7f);
         }
+        checkFinalAchievement();
         scheduleRefresh();
     }
 
@@ -303,7 +304,7 @@ public final class EntregasMenu implements InventoryHolder {
         DeliveryDefinition d = deliveries.get(idx);
         if (d.locked()) { viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>No hay entrega asignada en este slot.</gray>")); return; }
         var result = plugin.deliveryService().submit(viewer, d);
-        if (result instanceof DeliveryService.Result.Completed c) { onCredited(c.credited()); checkFinalAchievement(); }
+        if (result instanceof DeliveryService.Result.Completed c) { if (c.credited() > 0) onCredited(c.credited()); checkFinalAchievement(); }
         else if (result instanceof DeliveryService.Result.Partial p) onPartial(p);
         else if (result instanceof DeliveryService.Result.AlreadyCompleted) { viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>Ya completaste esta entrega.</gray>")); viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.7f, 0.5f); }
         else if (result instanceof DeliveryService.Result.NoItems) { viewer.sendActionBar(MenuItemBuilder.toComponent("<gray>No tienes este material.</gray>")); viewer.playSound(viewer.getLocation(), Sound.BLOCK_NOTE_BLOCK_BASS, 0.7f, 0.7f); }
@@ -333,6 +334,10 @@ public final class EntregasMenu implements InventoryHolder {
     }
 
     private void triggerFinalAchievement() {
+        if (plugin.deliveryConfig().priceMode() == DeliveryConfig.PriceMode.UNICO) {
+            viewer.playSound(viewer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+            return;
+        }
         double finalReward = plugin.deliveryConfig().finalReward();
         if (finalReward > 0) plugin.economy().depositFinal(viewer, finalReward);
         viewer.playSound(viewer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);

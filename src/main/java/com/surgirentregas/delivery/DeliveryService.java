@@ -93,70 +93,85 @@ public final class DeliveryService {
     }
 
     /**
-     * Entrega fraccionada, acumulativa e independiente.
+      * Entrega fraccionada, acumulativa e independiente.
      *
      * <p>Consume todo lo que el jugador tiene del material (hasta el requerido),
      * acredita la recompensa <b>proporcional</b> a la fraccion entregada y acumula
      * el progreso. No exige completar el paquete de un solo golpe: cada entrega
      * parcial suma su parte y cobra su parte.</p>
      *
+     * <p>UNICO: cada entrega paga independientemente.
+     * GLOBAL: solo consume items y acumula progreso; el pago final
+     * (price.final) se acredita cuando TODAS las entregas se completan.</p>
+     *
      * <p>Una entrega ya completada queda bloqueada para TODOS los jugadores,
      * incluidos operadores (OP): la restriccion es global, sin bypass.</p>
      */
-    @NotNull
-    public Result submit(@NotNull Player player, @NotNull DeliveryDefinition delivery) {
-        UUID id = player.getUniqueId();
-        Boolean prev = processing.putIfAbsent(id, Boolean.TRUE);
-        if (prev != null) {
-            return new Result.InProgress();
-        }
-        try {
-            if (delivery.locked()) {
-                return new Result.NoItems();
-            }
-            // Restriccion global anti-repeticion: aplica tambien a OP.
-            if (plugin.stats().hasCompleted(id, delivery.key())) {
-                plugin.getLogger().info("[Entrega] Ya completada por " + player.getName() + ": " + delivery.key());
-                return new Result.AlreadyCompleted();
-            }
-            int has = countInInventory(player, delivery);
-            if (has <= 0) {
-                return new Result.NoItems();
-            }
-            int required = delivery.amount();
-            int toConsume = Math.min(has, required);
-            if (!consume(player, delivery, toConsume)) {
-                plugin.getLogger().warning("[Entrega] Fallo al consumir items para " + player.getName() + ": " + delivery.key());
-                return new Result.ConsumeFailed();
-            }
-            // Puntos fraccionarios inmediatos al ranking (cada entrega aporta).
-            double fractionalPoints = (double) toConsume / (double) Math.max(1, required);
-            plugin.stats().addPoints(id, fractionalPoints);
-            // Recompensa proporcional a la fraccion entregada.
-            double credited = proportionalReward(delivery.reward(), required, toConsume);
-            if (economy.isAvailable()) {
-                boolean paid = economy.deposit(player, credited);
-                if (!paid) {
-                    plugin.getLogger().warning("[Entrega] Fallo al acreditar $" + credited + " a " + player.getName() + "!");
-                    return new Result.ConsumeFailed();
-                }
-                plugin.getLogger().info("[Entrega] Pagado $" + credited + " a " + player.getName() + " por " + delivery.key());
-            }
-            PlayerProgress progress = plugin.stats().getProgress(id, delivery.key());
-            progress.addProgress(toConsume);
-            if (progress.currentAmount() >= required) {
-                progress.setCurrentAmount(required);
-                progress.markCompleted();
-                plugin.stats().markCompleted(id, delivery.key());
-                plugin.getLogger().info("[Entrega] Entrega COMPLETADA: " + delivery.key() + " para " + player.getName());
-                return new Result.Completed(credited, delivery);
-            }
-            plugin.getLogger().info("[Entrega] Entrega PARCIAL: " + player.getName() + " tiene " + progress.currentAmount() + "/" + required + " de " + delivery.key() + " | Puntos ranking: +" + String.format("%.2f", fractionalPoints));
-            return new Result.Partial(progress.currentAmount(), required, credited);
-        } finally {
-            processing.remove(id);
-        }
-    }
+     @NotNull
+     public Result submit(@NotNull Player player, @NotNull DeliveryDefinition delivery) {
+         UUID id = player.getUniqueId();
+         Boolean prev = processing.putIfAbsent(id, Boolean.TRUE);
+         if (prev != null) {
+             return new Result.InProgress();
+         }
+         try {
+             if (delivery.locked()) {
+                 return new Result.NoItems();
+             }
+             // Restriccion global anti-repeticion: aplica tambien a OP.
+             if (plugin.stats().hasCompleted(id, delivery.key())) {
+                 plugin.getLogger().info("[Entrega] Ya completada por " + player.getName() + ": " + delivery.key());
+                 return new Result.AlreadyCompleted();
+             }
+             int has = countInInventory(player, delivery);
+             if (has <= 0) {
+                 return new Result.NoItems();
+             }
+             int required = delivery.amount();
+             int toConsume = Math.min(has, required);
+             if (!consume(player, delivery, toConsume)) {
+                 plugin.getLogger().warning("[Entrega] Fallo al consumir items para " + player.getName() + ": " + delivery.key());
+                 return new Result.ConsumeFailed();
+             }
+             // Puntos fraccionarios inmediatos al ranking (cada entrega aporta).
+             double fractionalPoints = (double) toConsume / (double) Math.max(1, required);
+             plugin.stats().addPoints(id, fractionalPoints);
+             // Registrar progreso.
+             PlayerProgress progress = plugin.stats().getProgress(id, delivery.key());
+             progress.addProgress(toConsume);
+             if (progress.currentAmount() >= required) {
+                 progress.setCurrentAmount(required);
+                 progress.markCompleted();
+                 plugin.stats().markCompleted(id, delivery.key());
+                 plugin.getLogger().info("[Entrega] Entrega COMPLETADA: " + delivery.key() + " para " + player.getName());
+             } else {
+                 plugin.getLogger().info("[Entrega] Entrega PARCIAL: " + player.getName() + " tiene " + progress.currentAmount() + "/" + required + " de " + delivery.key() + " | Puntos ranking: +" + String.format("%.2f", fractionalPoints));
+             }
+
+             // Modo de precio: UNICO paga por entrega; GLOBAL solo paga al final.
+             boolean isGlobal = plugin.deliveryConfig().priceMode() == DeliveryConfig.PriceMode.GLOBAL;
+             double credited = 0.0;
+             if (!isGlobal) {
+                 // UNICO: recompensa proporcional inmediata.
+                 credited = proportionalReward(delivery.reward(), required, toConsume);
+                 if (economy.isAvailable()) {
+                     boolean paid = economy.deposit(player, credited);
+                     if (!paid) {
+                         plugin.getLogger().warning("[Entrega] Fallo al acreditar $" + credited + " a " + player.getName() + "!");
+                         return new Result.ConsumeFailed();
+                     }
+                     plugin.getLogger().info("[Entrega] Pagado $" + credited + " a " + player.getName() + " por " + delivery.key());
+                 }
+             }
+
+             if (progress.currentAmount() >= required) {
+                 return new Result.Completed(credited, delivery);
+             }
+             return new Result.Partial(progress.currentAmount(), required, credited);
+         } finally {
+             processing.remove(id);
+         }
+     }
 
     /**
      * Recompensa proporcional a la fraccion entregada ({@code delivered}/{@code required}).
