@@ -1,0 +1,16 @@
+# ════════════════════════════════════════════════════════════════════════════════
+# SURGIRENTREGAS — Pool de items para el cofre de rotacion
+# ════════════════════════════════════════════════════════════════════════════════
+# Este archivo es generado y mantenido por el plugin.
+# Guarda los items en Base64 (bytes NBT) preservando NBT, PDC, modelos custom
+# (Oraxen / ItemsAdder / CustomModelData), encantamientos y lore.
+# Cada linea base64 representa UN item del pool.
+#
+# Para poblarlo:
+#   1) /entregasadmin
+#   2) Click en slot 28 (CHEST)
+#   3) Coloca los items en el cofre
+#   4) Cierra el cofre -> se guarda ASINCRONAMENTE
+#
+# Editar este archivo manualmente NO es necesario ni recomendado.
+items: []

@@ -1,0 +1,173 @@
+# ----------------------------------------------------------------
+# SURGIRENTREGAS â€” Configuracion principal
+# ----------------------------------------------------------------
+
+# Prefijo que aparece antes de los mensajes en chat.
+prefix: "<dark_gray><bold>SURGIR</bold></dark_gray> <gray>|</gray> "
+
+# â”€â”€ Precios â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Recompensa GLOBAL por defecto cuando se entrega un item.
+# Valor por defecto: 2000 ($2k).
+price:
+  global: 2000
+  # Recompensa final al completar las 3 entregas del ciclo (logro).
+  final: 2000
+  # Precios unicos por material (opcional). Si un material no esta listado,
+  # se usa el precio global. La clave debe ser el nombre del Material.
+  per-item:
+    DIAMOND: 5000
+    NETHERITE_INGOT: 50000
+    NETHER_STAR: 25000
+    TOTEM_OF_UNDYING: 25000
+    ELYTRA: 30000
+    ENCHANTED_GOLDEN_APPLE: 15000
+
+# â”€â”€ Economia â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Tipos soportados: VAULT, PLAYERPOINTS, COMMAND, VAULT_COMMAND, NONE
+# - VAULT: usa Vault Economy (requiere Vault + plugin economico).
+# - PLAYERPOINTS: usa PlayerPoints (detecta plugin PlayerPoints).
+# - COMMAND: ejecuta comandos configurados como recompensa.
+# - VAULT_COMMAND: intenta Vault y si falla ejecuta comandos.
+economy:
+  type: VAULT
+  # Comandos que se ejecutan al entregar (si type es COMMAND o fallback).
+  # Placeholders: %player%, %reward%, %amount%
+  commands:
+    - "eco give %player% %reward%"
+  # Comandos para la recompensa FINAL (al completar 3 entregas).
+  final-commands:
+    - "eco give %player% %reward%"
+    - "say %player% completo las 3 entregas!"
+
+# â”€â”€ Temporizadores de rotacion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Tiempo entre cada rotacion automatica de entregas.
+# Formatos admitidos: "1h", "30m", "1h30m", segundos puros.
+timer:
+  rotation: 20m
+  # Minutos entre anuncios al cambiar la entrega.
+  announcement-cooldown: 5
+  # Step por defecto del ajuste manual desde el menu admin (segundos).
+  manual-step: 60
+
+# â”€â”€ Ordenamiento por defecto â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# POR_MATERIALES = orden alfabetico del pool.
+# ORDEN_DEL_COFRE = orden en que los items fueron colocados en el cofre.
+# ALEATORIO = posiciones aleatorias al regenerar ciclo.
+default-order:
+  mode: POR_MATERIALES
+
+# â”€â”€ Modo de precio por defecto â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# GLOBAL = siempre usa price.global.
+# UNICO = usa price.per-item cuando exista; si no, price.global.
+default-price-mode: GLOBAL
+
+# â”€â”€ Mensajes de Action Bar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Cadenas que se envian por Action Bar en eventos especificos.
+# Se permite MiniMessage (etiquetas <...>) o codigos '&' clasicos.
+action-bar:
+  # Cuando el jugador abre el menu.
+  open: "<gray>Bienvenido a <bold>Entregas</bold>.</gray>"
+  # Cuando completa una entrega.
+  delivered: "<gray>Entrega completada.</gray> <white>+%reward%</white>"
+  # Cuando no tiene materiales.
+  no-items: "<gray>Necesitas los materiales para entregar.</gray>"
+  # Cuando ya entrego el lote del ciclo actual.
+  already-done: "<gray>Ya entregaste el lote.</gray>"
+  # Click sobre un slot de material (los slots ya no son entregables individuales).
+  use-entrega: "<gray>Usa el boton <gray>ENTREGAR MATERIALES</gray> para reclamar.</gray>"
+  # Cuando el admin cambia una configuracion.
+  admin-changed: "<gray>Configuracion actualizada.</gray>"
+  # Anuncio de cambio de ciclo.
+  rotation: "<gray>Las entregas cambiaron.</gray>"
+
+# â”€â”€ Mensajes de Chat â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+messages:
+  rotation-broadcast: "<prefix>Las /entregas cambiaron, vende tus items."
+  no-items: "<prefix><gray>Te faltan materiales para esta entrega.</gray>"
+  already-completed: "<prefix><gray>Ya completaste esta entrega. Espera al reinicio global.</gray>"
+  delivered: "<prefix><gray>Entrega completada: +%reward%</gray>"
+  final-achievement: "<prefix><white><bold>Â¡LOGRO!</bold></white> <white>Completaste las 3 entregas y recibiste <white>%reward%</white>.</white>"
+  insufficient: "<prefix><gray>No tienes los items requeridos.</gray>"
+
+# â”€â”€ Cofre de rotacion â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+chest:
+  # Tamano del cofre (siempre multiplo de 9). 54 = 6 filas.
+  size: 54
+  # Cantidad de items que se eligen por rotacion.
+  per-rotation: 3
+  # Titulo del cofre.
+  title: "<dark_gray><bold>SURGIR</bold></dark_gray> <gray>|</gray> <white>Cofre de Rotacion</white>"
+
+# â”€â”€ Menu del jugador â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+menu:
+  title: "<dark_gray><bold>SURGIR</bold></dark_gray> <gray>|</gray> <white>Entregas</white>"
+
+# â”€â”€ Menu admin â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+admin-menu:
+  title: "<dark_gray><bold>SURGIR</bold></dark_gray> <gray>|</gray> <white>Admin Entregas</white>"
+
+# â”€â”€ Top â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+top:
+  enabled: true
+  title: "<dark_gray><bold>SURGIR</bold></dark_gray> <gray>|</gray> <white>Top Entregas</white>"
+
+# â”€â”€ Fallback AutÃ³nomo Vanilla â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Lista por defecto de cultivos y minerales tipo Vanilla para cuando el
+# cofre administrativo estÃ© vacÃ­o. El plugin prioriza el cofre si tiene Ã­tems,
+# de lo contrario selecciona aleatoriamente de esta_pool.
+fallback-pool:
+  enabled: true
+  # Cantidad de entregas a generar si el cofre estÃ¡ vacÃ­o (1, 2 o 3)
+  default-deliveries-count: 3
+  items:
+    # --- MINERALES ---
+    - material: "RAW_IRON"
+      min-amount: 8
+      max-amount: 16
+      reward: 2000
+    - material: "RAW_GOLD"
+      min-amount: 4
+      max-amount: 8
+      reward: 2000
+    - material: "COAL"
+      min-amount: 16
+      max-amount: 32
+      reward: 2000
+    - material: "COPPER_INGOT"
+      min-amount: 8
+      max-amount: 16
+      reward: 2000
+    - material: "LAPIS_LAZULI"
+      min-amount: 16
+      max-amount: 32
+      reward: 2000
+
+    # --- CULTIVOS ---
+    - material: "WHEAT"
+      min-amount: 32
+      max-amount: 64
+      reward: 2000
+    - material: "CARROT"
+      min-amount: 32
+      max-amount: 64
+      reward: 2000
+    - material: "POTATO"
+      min-amount: 32
+      max-amount: 64
+      reward: 2000
+    - material: "BEETROOT"
+      min-amount: 32
+      max-amount: 64
+      reward: 2000
+
+# â”€â”€ Mantenimiento (Exclusivo de SurgirEntregas) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# El mantenimiento es una restricciÃ³n LÃ“GICA INTERNA del plugin: NO modifica
+# el estado del servidor, NO usa whitelist y NO expulsa/kickea jugadores.
+maintenance:
+  enabled: false
+  bypass-permission: "surgirentregas.maintenance.bypass"
+  messages:
+    blocked-access: "<gray>[!] El sistema de entregas se encuentra en mantenimiento. Intenta mÃ¡s tarde.</gray>"
+    enabled-broadcast: "<gray>[!] SurgirEntregas ha entrado en modo Mantenimiento.</gray>"
+    disabled-broadcast: "<gray>[!] Modo Mantenimiento finalizado.</gray>"
+

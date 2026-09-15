@@ -1,0 +1,65 @@
+﻿# --- SurgirEntregas .gitignore ---
+# Maven / compilacion
+/target/
+/target
+*.class
+*.jar
+*.war
+*.ear
+*.zip
+hs_err_pid*
+replay_pid*
+
+# Maven wrapper cache
+.mvn/
+mvnw
+mvnw.cmd
+
+# IDE - IntelliJ
+/.idea/
+/*.iml
+/*.ipr
+/*.iws
+.idea/
+
+# IDE - Eclipse
+.classpath
+.project
+.settings/
+.metadata/
+
+# IDE - VS Code
+.vscode/
+.code/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Paper / Servidor local (nunca subir)
+# Si tienes un servidor de pruebas dentro del proyecto, ignoralo
+/server/
+/world/
+/world_nether/
+/world_the_end/
+plugins/
+banned-ips.json
+banned-players.json
+bukkit.yml
+paper.yml
+spigot.yml
+server.properties
+whitelist.json
+ops.json
+usernamecache.json
+
+# Datos runtime del plugin (SQLite / flatfiles generados)
+# Descomenta si NO quieres versionar datos de prueba local:
+# /ranking.json
+# /cycle.dat
+# /items_pool.yml

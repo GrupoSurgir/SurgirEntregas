@@ -1,0 +1,52 @@
+# SurgirEntregas — Menu del jugador (/entregas) — 27 slots
+name: "Entregas"
+size: 27
+items:
+  btn-0:
+    item:
+      material: BLACK_STAINED_GLASS_PANE
+    slots:
+      - 0-10
+      - 12
+      - 14
+      - 16-17
+      - 19-25
+  btn-11:
+    slot: 11
+    item:
+      material: QUARTZ
+      amount: 16
+      lore:
+        - "<gray>No tienes</gray>"
+  btn-13:
+    slot: 13
+    item:
+      material: CARROT
+      amount: 64
+      lore:
+        - "<gray>Te falta</gray>"
+  btn-15:
+    slot: 15
+    item:
+      material: BARRIER
+      name: "<white>Completada</white>"
+      lore:
+        - "<gray>Entrega finalizada con exito</gray>"
+        - "<dark_gray>Espera al proximo ciclo</dark_gray>"
+  btn-18:
+    slot: 18
+    item:
+      material: LIME_DYE
+      name: "<white>Disponible</white>"
+      lore:
+        - "<gray>Tienes los materiales para entregar</gray>"
+        - "<gray>Haz clic para entregar</gray>"
+        - "<dark_gray>Recompensa proporcional</dark_gray>"
+  btn-26:
+    slot: 26
+    item:
+      material: NETHER_STAR
+      name: "<white>TOP ENTREGAS</white>"
+      lore:
+        - "<gray>Sin entregas completadas</gray>"
+        - "<dark_gray>Se el primero en entregar</dark_gray>"

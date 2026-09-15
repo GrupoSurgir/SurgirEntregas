@@ -1,0 +1,97 @@
+# SurgirEntregas — Menu administrativo (/entregasadmin) — 45 slots
+name: "EntregasAdmin"
+size: 45
+items:
+  btn-0:
+    item:
+      material: BLACK_STAINED_GLASS_PANE
+    slots:
+      - 0-10
+      - 12
+      - 14
+      - 16-17
+      - 19-25
+      - 27
+      - 35-44
+  btn-11:
+    slot: 11
+    item:
+      material: QUARTZ
+      amount: 16
+  btn-13:
+    slot: 13
+    item:
+      material: CARROT
+      amount: 64
+  btn-15:
+    slot: 15
+    item:
+      material: TOTEM_OF_UNDYING
+  btn-18:
+    slot: 18
+    item:
+      material: LIME_DYE
+  btn-26:
+    slot: 26
+    item:
+      material: NETHER_STAR
+  btn-28:
+    slot: 28
+    item:
+      material: CHEST
+      name: "<white>Gestionar items de entregas</white>"
+      lore:
+        - "<gray>Abre el cofre de rotacion</gray>"
+        - "<gray>Coloca la cantidad exacta</gray>"
+        - "<dark_gray>Soporte para modelos custom</dark_gray>"
+        - "<dark_gray>CustomModelData y NBT preservados</dark_gray>"
+  btn-29:
+    slot: 29
+    item:
+      material: LIME_DYE
+      name: "<white>+</white>"
+      lore:
+        - "<gray>Aumentar tiempo</gray>"
+        - "<dark_gray>Unidad activa en el compas</dark_gray>"
+  btn-30:
+    slot: 30
+    item:
+      material: RECOVERY_COMPASS
+      name: "<white>TIEMPO  H01:<gray>M40</gray>:S54</white>"
+      lore:
+        - "<gray>Unidad activa resaltada en blanco</gray>"
+        - "<gray>Clic para cambiar H / M / S</gray>"
+        - "<dark_gray>Usa + y - para ajustar</dark_gray>"
+  btn-31:
+    slot: 31
+    item:
+      material: RED_DYE
+      name: "<white>-</white>"
+      lore:
+        - "<gray>Disminuir tiempo</gray>"
+        - "<dark_gray>Unidad activa en el compas</dark_gray>"
+  btn-32:
+    slot: 32
+    item:
+      material: EMERALD
+      name: "<white>Gestion de economia</white>"
+      lore:
+        - "<gray>Control de dinero y recompensas</gray>"
+        - "<gray>Tipo actual segun configuracion</gray>"
+        - "<dark_gray>Clic para ciclar VAULT / POINTS / COMMAND</dark_gray>"
+  btn-33:
+    slot: 33
+    item:
+      material: REPEATER
+      name: "<white>Orden de items</white>"
+      lore:
+        - "<gray>Alterna el orden de rotacion</gray>"
+        - "<dark_gray>Por materiales / Cofre / Aleatorio</dark_gray>"
+  btn-34:
+    slot: 34
+    item:
+      material: GOLD_INGOT
+      name: "<white>Precio por entrega</white>"
+      lore:
+        - "<gray>Alterna el modo de precio</gray>"
+        - "<dark_gray>GLOBAL o UNICO por material</dark_gray>"

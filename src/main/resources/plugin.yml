@@ -1,0 +1,32 @@
+name: SurgirEntregas
+version: '${project.version}'
+main: com.surgirentregas.core.SurgirEntregasPlugin
+api-version: '1.21'
+description: Sistema de entregas con cofre de rotacion para Paper 1.21+
+authors: [Samuel Buritica]
+
+# Vault es opcional: sin el, el menu abre pero no se puede cobrar.
+softdepend: [Vault]
+
+commands:
+  entregas:
+    description: Abre el menu de entregas del jugador
+    usage: /entregas
+    permission: surgirentregas.usar
+    aliases: [en]
+  entregasadmin:
+    description: Abre el menu administrativo de entregas
+    usage: /entregasadmin
+    permission: entregas.admin
+    aliases: [enadmin]
+
+permissions:
+  entregas.admin:
+    description: Permiso para usar comandos y menus administrativos
+    default: op
+  surgirentregas.usar:
+    description: Abrir el menu y completar entregas
+    default: true
+  surgirentregas.maintenance.bypass:
+    description: Permite usar el sistema de entregas durante el mantenimiento
+    default: op
