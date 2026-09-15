@@ -58,7 +58,6 @@ public final class EntregasCommand implements CommandExecutor {
                 long start = System.nanoTime();
                 plugin.reloadConfig();
                 plugin.deliveryConfig().load();
-                plugin.menuLayout().load();
                 plugin.messages().load();
                 plugin.maintenanceManager().loadState();
                 plugin.deliveryConfig().regenerateCycle();

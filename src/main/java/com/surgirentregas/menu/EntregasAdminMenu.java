@@ -24,13 +24,13 @@ public final class EntregasAdminMenu implements InventoryHolder {
 
     private final SurgirEntregasPlugin plugin;
     private final AdminMenuHolder holder;
-    private final MenuLayout.MenuDefinition layout;
+    private final MenuConfig.MenuDefinition layout;
     private Inventory inventory;
 
     public EntregasAdminMenu(@NotNull SurgirEntregasPlugin plugin, @NotNull AdminMenuHolder holder) {
         this.plugin = plugin;
         this.holder = holder;
-        this.layout = plugin.menuLayout().menu("entregas_admin");
+        this.layout = plugin.menuConfig().menu("entregas_admin");
     }
 
     public void open() {
@@ -42,7 +42,7 @@ public final class EntregasAdminMenu implements InventoryHolder {
 
     private void build() {
         inventory.clear();
-        for (MenuLayout.ButtonDefinition btn : layout.buttons().values()) {
+        for (MenuConfig.MenuButton btn : layout.buttons().values()) {
             ItemStack item = MenuItemBuilder.build(btn);
             for (int slot : btn.slots()) if (slot >= 0 && slot < layout.size()) inventory.setItem(slot, item);
         }

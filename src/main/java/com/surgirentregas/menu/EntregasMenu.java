@@ -27,13 +27,13 @@ public final class EntregasMenu implements InventoryHolder {
     private final SurgirEntregasPlugin plugin;
     private final Player viewer;
     private Inventory inventory;
-    private final MenuLayout.MenuDefinition layout;
+    private final MenuConfig.MenuDefinition layout;
     private final AtomicReference<Runnable> clockTaskRef = new AtomicReference<>();
 
     public EntregasMenu(@NotNull SurgirEntregasPlugin plugin, @NotNull Player viewer) {
         this.plugin = plugin;
         this.viewer = viewer;
-        this.layout = plugin.menuLayout().menu("entregas");
+        this.layout = plugin.menuConfig().menu("entregas");
     }
 
     public void open() {
@@ -48,7 +48,7 @@ public final class EntregasMenu implements InventoryHolder {
 
     private void build() {
         inventory.clear();
-        for (MenuLayout.ButtonDefinition btn : layout.buttons().values()) {
+        for (MenuConfig.MenuButton btn : layout.buttons().values()) {
             ItemStack item = MenuItemBuilder.build(btn);
             for (int slot : btn.slots()) if (slot >= 0 && slot < layout.size()) inventory.setItem(slot, item);
         }
@@ -212,7 +212,7 @@ public final class EntregasMenu implements InventoryHolder {
             inventory.setItem(26, MenuItemBuilder.build(Material.BLACK_STAINED_GLASS_PANE, 1, "<dark_gray>-</dark_gray>", List.of()));
             return;
         }
-        MenuLayout.ButtonDefinition topBtn = layout.button("btn-26");
+        MenuConfig.MenuButton topBtn = layout.button("btn-26");
         String displayName = topBtn != null && topBtn.name() != null ? topBtn.name() : "TOP ENTREGAS";
         var top = plugin.stats().top(7);
         List<Component> loreLines = new ArrayList<>();

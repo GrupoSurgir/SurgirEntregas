@@ -43,23 +43,12 @@ public final class MenuItemBuilder {
     private MenuItemBuilder() {}
 
     /**
-     * Construye un ItemStack a partir de un boton YAML.
-     * <p>Si el material no es un item valido (ej. bloque WALL_*), devuelve
-     * un fallback de {@link Material#BARRIER} para evitar
-     * {@code IllegalArgumentException}.</p>
+     * Construye un ItemStack a partir de un MenuButton de MenuConfig.
+     * Delega al metodo basico con material, amount, name y lore.
      */
     @NotNull
-    public static ItemStack build(@NotNull MenuLayout.ButtonDefinition def) {
-        Material safe = ensureItem(def.material());
-        ItemStack item = new ItemStack(safe, def.amount());
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return item;
-
-        applyNameAndLore(meta, def.name(), def.lore());
-        applyHiddenFlags(meta);
-
-        item.setItemMeta(meta);
-        return item;
+    public static ItemStack build(@NotNull MenuConfig.MenuButton btn) {
+        return build(btn.material(), btn.amount(), btn.name(), btn.lore());
     }
 
     /**

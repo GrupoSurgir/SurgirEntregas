@@ -9,7 +9,7 @@ import com.surgirentregas.menu.EntregasAdminMenu;
 import com.surgirentregas.menu.EntregasMenu;
 import com.surgirentregas.menu.EntregasMenuListener;
 import com.surgirentregas.menu.MessagesConfig;
-import com.surgirentregas.menu.MenuLayout;
+import com.surgirentregas.menu.MenuConfig;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -31,7 +31,7 @@ public final class SurgirEntregasPlugin extends JavaPlugin {
     private DeliveryService deliveryService;
     private DeliveryStats stats;
     private EconomyHook economy;
-    private MenuLayout menuLayout;
+    private MenuConfig menuConfig;
     private MessagesConfig messages;
     private MaintenanceManager maintenanceManager;
 
@@ -42,8 +42,6 @@ public final class SurgirEntregasPlugin extends JavaPlugin {
         if (!getDataFolder().exists()) getDataFolder().mkdirs();
         saveDefaultConfig();
 
-        ensureResource("menus/entregas.yml");
-        ensureResource("menus/entregas_admin.yml");
         ensureResource("items_pool.yml");
 
         this.deliveryConfig = new DeliveryConfig(this);
@@ -78,8 +76,7 @@ public final class SurgirEntregasPlugin extends JavaPlugin {
         }
 
         this.deliveryService = new DeliveryService(this);
-        this.menuLayout = new MenuLayout(this);
-        this.menuLayout.load();
+        this.menuConfig = new MenuConfig(this);
         this.messages = new MessagesConfig(this);
         this.messages.load();
         this.maintenanceManager = new MaintenanceManager(this);
@@ -224,7 +221,7 @@ public final class SurgirEntregasPlugin extends JavaPlugin {
     public DeliveryService deliveryService() { return deliveryService; }
     public DeliveryStats stats() { return stats; }
     public EconomyHook economy() { return economy; }
-    public MenuLayout menuLayout() { return menuLayout; }
+    public MenuConfig menuConfig() { return menuConfig; }
     public MessagesConfig messages() { return messages; }
     public MaintenanceManager maintenanceManager() { return maintenanceManager; }
 
